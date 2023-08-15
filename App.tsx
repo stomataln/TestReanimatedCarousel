@@ -5,7 +5,7 @@
  * @format
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import type {PropsWithChildren} from 'react';
 import {
   Dimensions,
@@ -17,6 +17,7 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Carousel from 'react-native-reanimated-carousel';
 
 import {
@@ -65,16 +66,19 @@ function App(): JSX.Element {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
+  const [focusIndex, setFocusIndex] = useState(0);
+
   return (
     <SafeAreaView style={backgroundStyle}>
+      <GestureHandlerRootView style={{ flex: 1 }}>
       <StatusBar
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
+      <Text style={{ color: 'black', fontSize: 20, height: 50, backgroundColor: 'pink' }}>{focusIndex}</Text>
       <Carousel
-        mode="parallax"
         key={12}
-        windowSize={3}
+        //windowSize={3}
         loop={false}
         //ref={listRef}
         style={{
@@ -82,19 +86,32 @@ function App(): JSX.Element {
           width: '100%',
           height: 600,
           justifyContent: 'center',
+          backgroundColor: 'purple',
         }}
         vertical={false}
         width={itemWidth * 0.8}
         data={[1, 2, 3, 4, 5]}
         defaultIndex={0}
+        pagingEnabled={false}
+        onSnapToItem={(drawIndex) => {
+          setFocusIndex(drawIndex);
+        }}
         renderItem={({index}) => (
           <View
             style={{
               backgroundColor: 'blue',
-              height: 600,
+              height: '100%',
               marginHorizontal: 16,
             }}>
-            <Text style={{color: 'white'}}>{index}</Text>
+              <View
+                style={{
+                  backgroundColor: 'green',
+                  width: '80%',
+                  height: '80%',
+                  marginHorizontal: 16,
+                }}>
+                <Text style={{color: 'white'}}>{index}</Text>
+              </View>
           </View>
         )}
       />
@@ -122,6 +139,7 @@ function App(): JSX.Element {
           <LearnMoreLinks />
         </View>
       </ScrollView> */}
+      </GestureHandlerRootView>
     </SafeAreaView>
   );
 }
